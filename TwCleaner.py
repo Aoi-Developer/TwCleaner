@@ -10,8 +10,8 @@ print("      Dev:aoi_satou https://twitter.com/aoi_0020")
 print("-----------------------------------------------------")
 
 
-CONSUMER_KEY = "3rJOl1ODzm9yZy63FACdg"
-CONSUMER_KEY_SECRET = "5jPoQ5kQvMJFDYRNE8bQ4rHuds4xJqhvgNJM4awaE8"
+CONSUMER_KEY = ""
+CONSUMER_KEY_SECRET = ""
 API_ROOT = "https://api.twitter.com"
 
 session = OAuth1Session(CONSUMER_KEY, CONSUMER_KEY_SECRET)
