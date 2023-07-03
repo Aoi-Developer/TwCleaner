@@ -8,8 +8,8 @@ print("      Dev:aoi_satou https://twitter.com/aoi_0020")
 print("-----------------------------------------------------")
 
 
-CONSUMER_KEY = ""
-CONSUMER_KEY_SECRET = ""
+CONSUMER_KEY = "3rJOl1ODzm9yZy63FACdg"
+CONSUMER_KEY_SECRET = "5jPoQ5kQvMJFDYRNE8bQ4rHuds4xJqhvgNJM4awaE8"
 
 oauth1_user_handler = tweepy.OAuth1UserHandler(
     CONSUMER_KEY, CONSUMER_KEY_SECRET,
