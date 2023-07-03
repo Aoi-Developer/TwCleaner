@@ -1,5 +1,3 @@
-from requests_oauthlib import OAuth1Session
-import urllib.parse
 import tweepy
 import webbrowser
 import subprocess
@@ -12,34 +10,23 @@ print("-----------------------------------------------------")
 
 CONSUMER_KEY = ""
 CONSUMER_KEY_SECRET = ""
-API_ROOT = "https://api.twitter.com"
 
-session = OAuth1Session(CONSUMER_KEY, CONSUMER_KEY_SECRET)
-token_endpoint = API_ROOT + "/oauth/request_token"
-response = session.post(token_endpoint, params={"oauth_callback": "oob"})
-oauth_token = dict(urllib.parse.parse_qsl(response.text))["oauth_token"]
+oauth1_user_handler = tweepy.OAuth1UserHandler(
+    CONSUMER_KEY, CONSUMER_KEY_SECRET,
+    callback="oob"
+)
+auth_url = str(oauth1_user_handler.get_authorization_url())
 
-auth_endpoint = API_ROOT + "/oauth/authenticate"
-auth_url = f"{auth_endpoint}?oauth_token={oauth_token}"
-print("URLを作成しました。アドレスにアクセスして認証した後、表示されたPINを入力してください")
+print("URLを作成しました。アドレスにアクセスして認証した後、表示されたPINを入力してください\nURL: " + auth_url)
+
 webbrowser.open(auth_url)
-print(auth_url)
+
 # ユーザにPIN番号を入力させる
 oauth_verifier = input("PIN入力: ")
 
-# 手順3
-access_token_endpoint = API_ROOT + "/oauth/access_token"
-session = OAuth1Session(CONSUMER_KEY, CONSUMER_KEY_SECRET,
-                        oauth_token, oauth_verifier)
-
-response = session.post(
-    access_token_endpoint,
-    params={"oauth_verifier": oauth_verifier},
+oauth_token, oauth_token_secret = oauth1_user_handler.get_access_token(
+    oauth_verifier
 )
-
-parsed_response = dict(urllib.parse.parse_qsl(response.text))
-oauth_token = parsed_response["oauth_token"]
-oauth_token_secret = parsed_response["oauth_token_secret"]
 
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_KEY_SECRET)
 auth.set_access_token(oauth_token, oauth_token_secret)
@@ -51,7 +38,7 @@ removename = 'ツイート'
 
 # YESならTrue、NOならFalseを返す
 def confirm():
-    dic={'y':True,'yes':True,'n':False,'no':False}
+    dic = {'y': True, 'yes': True, 'n': False, 'no': False}
     while True:
         try:
             return dic[input(user.screen_name + 'さんの' + removename + 'を消去します。よろしいですか？ [Y]es/[N]o >> ').lower()]
@@ -66,11 +53,11 @@ j = 0
 if __name__ == '__main__':
   if confirm():
     while True:
-      i=0
+      i = 0
       tweets = None
       tweets = api.user_timeline(count=200)  # 取得件数
       for tweet in tweets:
-        i=i+1
+        i += 1
       if (i ==0):
         break
       else:
@@ -81,19 +68,19 @@ if __name__ == '__main__':
          except:
            break
          print('ID:' + str(tweet.id) + 'を削除しました。\n')
-         cut = cut + 1
+         cut += 1
     print(str(cut) + '個のツイートを削除しました。')
   else:
     print('ツイート消去をキャンセルしました')
   removename = 'いいね'
   if confirm():
     while True:
-      i=0
+      i = 0
       tweets = None
       tweets = api.get_favorites(screen_name=user.screen_name, count=200)  # 取得件数
       for tweet in tweets:
-        i=i+1
-      if (i ==0):
+        i += 1
+      if i == 0:
         break
       else:
         for tweet in tweets:
@@ -103,7 +90,7 @@ if __name__ == '__main__':
          except tweepy.errors.NotFound:
            pass
          print('ID:' + str(tweet.id) + 'のいいね削除しました。\n')
-         j = j + 1
+         j += 1
     print(str(cut) + '個のツイートを削除しました。')
     print(str(j) + '個のいいねを取り消しました。')
   else:
